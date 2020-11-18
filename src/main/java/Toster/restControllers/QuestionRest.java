@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 
 import javax.ws.rs.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -22,7 +23,7 @@ public class QuestionRest {
     public List<String> getAllQuestions()
     {
         List<Question> fullQuestions = questionService.getListQuestions();
-        List<String> onlyQuestions = null;
+        List<String> onlyQuestions = new ArrayList<>();
         for (Question question: fullQuestions) {
             onlyQuestions.add(question.getQuestion());
         }
