@@ -31,17 +31,17 @@ public class QuestionRest {
     }
 
     @GetMapping(value = "/question/{id}")
-    public Question getQuestionInfo(@PathParam("id") Long id){
+    public Question getQuestionInfo(@PathVariable("id") Long id){
         return questionService.getQuestionInfo(id);
     }
 
     @PutMapping(value = "/question/{id}")
-    public Question updateQuestion(@PathParam("id") Long id, String question, List<Answer> answer){
+    public Question updateQuestion(@PathVariable("id") Long id, String question, List<Answer> answer){
         return questionService.updateQuestion(id, question, answer);
     }
 
     @DeleteMapping(value = "/question/{id}")
-    public void deleteQuestion(@PathParam("id")Long id){
+    public void deleteQuestion(@PathVariable("id")Long id){
         questionService.deleteQuestion(id);
     }
 
