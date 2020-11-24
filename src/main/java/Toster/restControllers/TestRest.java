@@ -10,22 +10,22 @@ import javax.ws.rs.PathParam;
 
 @Component
 @RestController
-@RequestMapping
+@RequestMapping(value = "/test")
 public class TestRest {
     @Autowired
     private TestService testService;
 
-    @PostMapping(value = "/test/add")
+    @PostMapping(value = "/add")
     public Test addTest(Test test) {
         return testService.addTest(test);
     }
 
-    @DeleteMapping(value = "/test/{id}")
+    @DeleteMapping(value = "/{id}")
     public void deleteTest(@PathParam("id") Long id) {
         testService.deleteTest(id);
     }
 
-    @GetMapping(value = "/test/{id}")
+    @GetMapping(value = "/{id}")
     public Test getTest(@PathParam("id") Long id) {
         return testService.getTest(id);
     }

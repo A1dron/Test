@@ -14,5 +14,5 @@ public interface QuestionService {
 
     Question getQuestionInfo(Long id);
 
-    Question updateQuestion(Long id, String question, List<Answer> answer);
+    Question updateQuestion(Long id, Question question);
 }

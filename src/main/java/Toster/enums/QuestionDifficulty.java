@@ -1,6 +1,6 @@
 package Toster.enums;
 
-public enum Difficulty {
+public enum QuestionDifficulty {
     EASY,
     MEDIUM,
     HARD

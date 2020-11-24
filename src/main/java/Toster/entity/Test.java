@@ -16,6 +16,8 @@ public class Test {
     @ManyToMany(mappedBy = "test")
     private List<Question> questions;
 
+    public Test(){}
+
     public Test(String name, List<Question> questions) {
         this.name = name;
         this.questions = questions;

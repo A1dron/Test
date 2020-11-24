@@ -1,6 +1,6 @@
 package Toster.enums;
 
-public enum TypeQuestion {
+public enum QuestionType {
     ONE_ANSWER,
     MORE_ANSWER,
     OPEN_ANSWER;

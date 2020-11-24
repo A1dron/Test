@@ -10,6 +10,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @EnableJpaRepositories
 public class Main {
     public static void main(String[] args) {
+
+        ApiContextInitializer.init();
         SpringApplication.run(Main.class,args);
     }
 }

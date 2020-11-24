@@ -1,7 +1,7 @@
 package Toster.entity;
 
-import Toster.enums.Difficulty;
-import Toster.enums.TypeQuestion;
+import Toster.enums.QuestionDifficulty;
+import Toster.enums.QuestionType;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,13 +21,15 @@ public class Question {
     private String question;
 
     @Enumerated(EnumType.STRING)
-    private Difficulty difficulty;
+    private QuestionDifficulty questionDifficulty;
 
     @Enumerated(EnumType.STRING)
-    private TypeQuestion type;
+    private QuestionType type;
 
     @Column
     private String author;
+
+    private boolean isPassed;
 
     @OneToMany(mappedBy = "question")
     private List<Answer> answers;
@@ -44,9 +46,9 @@ public class Question {
                     @JoinColumn (name = "testId")})
     private List<Test> test;
 
-    public Question(String question, Difficulty difficulty, TypeQuestion type, String author, List<Answer> answers) {
+    public Question(String question, QuestionDifficulty questionDifficulty, QuestionType type, String author, List<Answer> answers) {
         this.question = question;
-        this.difficulty = difficulty;
+        this.questionDifficulty = questionDifficulty;
         this.type = type;
         this.author = author;
         this.answers = answers;
@@ -68,19 +70,19 @@ public class Question {
         this.question = question;
     }
 
-    public Difficulty getDifficulty() {
-        return difficulty;
+    public QuestionDifficulty getDifficulty() {
+        return questionDifficulty;
     }
 
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
+    public void setDifficulty(QuestionDifficulty questionDifficulty) {
+        this.questionDifficulty = questionDifficulty;
     }
 
-    public TypeQuestion getType() {
+    public QuestionType getType() {
         return type;
     }
 
-    public void setType(TypeQuestion type) {
+    public void setType(QuestionType type) {
         this.type = type;
     }
 
@@ -102,6 +104,10 @@ public class Question {
 
     public List<Test> getTest() {
         return test;
+    }
+
+    public boolean isTrueAnswer(){
+        return true;
     }
 
     public void setTest(List<Test> test) {

@@ -14,9 +14,14 @@ public class Answer {
     @Column
     private String answer;
 
+    @Column
+    private boolean isTrueAnswer;
+
     @ManyToOne
     @JoinColumn
     private Question question;
+
+    public Answer(){}
 
     public Answer(String answer){
         this.answer = answer;

@@ -40,10 +40,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public Question updateQuestion(Long id, String question, List<Answer> answer) {
+    public Question updateQuestion(Long id, Question question) {
         Question updateQuestion = getQuestionInfo(id);
-        updateQuestion.setQuestion(question);
-        updateQuestion.setAnswers(answer);
+        updateQuestion = question;
         return updateQuestion;
     }
 }

@@ -12,13 +12,13 @@ import java.util.List;
 
 @Component
 @RestController
-@RequestMapping
+@RequestMapping(value = "/question")
 public class QuestionRest {
 
     @Autowired
     private QuestionService questionService;
 
-    @PostMapping(value = "/question/view")
+    @PostMapping(value = "/view")
     public List<String> getAllQuestions()
     {
         List<Question> fullQuestions = questionService.getListQuestions();
@@ -29,22 +29,22 @@ public class QuestionRest {
         return onlyQuestions;
     }
 
-    @GetMapping(value = "/question/{id}")
+    @GetMapping(value = "/{id}")
     public Question getQuestionInfo(@PathVariable("id") Long id){
         return questionService.getQuestionInfo(id);
     }
 
-    @PutMapping(value = "/question/{id}")
-    public Question updateQuestion(@PathVariable("id") Long id, String question, List<Answer> answer){
-        return questionService.updateQuestion(id, question, answer);
+    @PutMapping(value = "/{id}")
+    public Question updateQuestion(@PathVariable("id") Long id, @RequestBody Question question){
+        return questionService.updateQuestion(id, question);
     }
 
-    @DeleteMapping(value = "/question/{id}")
+    @DeleteMapping(value = "/{id}")
     public void deleteQuestion(@PathVariable("id")Long id){
         questionService.deleteQuestion(id);
     }
 
-    @PostMapping(value = "/question/add")
+    @PostMapping(value = "/add")
     public Question addQuestion(Question question){
         return questionService.addQuestion(question);
     }
