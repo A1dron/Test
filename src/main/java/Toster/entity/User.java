@@ -1,5 +1,6 @@
 package Toster.entity;
 
+import Toster.Bot.State;
 import Toster.enums.UserRole;
 
 import javax.persistence.*;
@@ -8,8 +9,18 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users")
-    @SequenceGenerator(name="users", sequenceName = "seq_users")
+    @SequenceGenerator(name = "users", sequenceName = "seq_users")
     private Long id;
+    @Column
+    private Integer chatId;
+    @Column
+    private State botState;
+    @Column
+    private Integer score;
+    @Column
+    private Integer highScore;
+
+
     @Column(name = "name")
     private String name;
     @Column(name = "login")
@@ -19,6 +30,20 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole role;
 
+    public User(String name, String login, String password) {
+        this.name = name;
+        this.login = login;
+        this.password = password;
+        this.role = UserRole.USER;
+    }
+
+    public User(int chatId) {
+        this.chatId = chatId;
+        this.name = String.valueOf(chatId);
+        this.score = 0;
+        this.highScore = 0;
+        this.botState = State.START;
+    }
 
     public Long getId() {
         return id;
@@ -26,6 +51,38 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(Integer chatId) {
+        this.chatId = chatId;
+    }
+
+    public State getBotState() {
+        return botState;
+    }
+
+    public void setBotState(State botState) {
+        this.botState = botState;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public Integer getHighScore() {
+        return highScore;
+    }
+
+    public void setHighScore(Integer highScore) {
+        this.highScore = highScore;
     }
 
     public UserRole getRole() {
@@ -60,10 +117,5 @@ public class User {
         this.password = password;
     }
 
-    public User(String name, String login, String password){
-        this.name = name;
-        this.login = login;
-        this.password = password;
-        this.role = UserRole.USER;
-    }
+
 }
