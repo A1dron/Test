@@ -3,6 +3,7 @@ package Toster.Bot.handler;
 import Toster.Bot.State;
 import Toster.entity.User;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -25,10 +26,11 @@ public class HelpHandler implements Handler{
                 createInlineKeyboardButton("Change name", NAME_CHANGE));
 
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtonsRowOne));
-
-        return List.of(createMessageTemplate(user).setText(String.format("" +
-                "You've asked for help %s? Here it comes!", user.getName()))
-                .setReplyMarkup(inlineKeyboardMarkup));
+        SendMessage result = createMessageTemplate(user);
+        result.setText(String.format("" +
+                "You've asked for help %s? Here it comes!", user.getName()));
+        result.setReplyMarkup(inlineKeyboardMarkup);
+        return List.of(result);
     }
 
     @Override

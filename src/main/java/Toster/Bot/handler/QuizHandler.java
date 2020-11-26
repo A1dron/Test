@@ -5,8 +5,8 @@ import Toster.entity.Question;
 import Toster.entity.User;
 import Toster.repositoryes.QuestionRepository;
 import Toster.repositoryes.UserRepository;
-import jdk.incubator.jpackage.internal.Log;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
@@ -52,7 +52,7 @@ public class QuizHandler implements Handler{
     }
 
     private List<PartialBotApiMethod<? extends Serializable>> correctAnswer(User user, String message) {
-        Log.info("correct");
+        //Log.info("correct");
         final int currentScore = user.getScore() + 1;
         user.setScore(currentScore);
         userRepository.save(user);
@@ -84,10 +84,10 @@ public class QuizHandler implements Handler{
                 createInlineKeyboardButton("Try again?", QUIZ_START));
 
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtonsRowOne));
-
-        return List.of(createMessageTemplate(user)
-                .setText(String.format("Incorrect!%nYou scored *%d* points!", currentScore))
-                .setReplyMarkup(inlineKeyboardMarkup));
+        SendMessage result = createMessageTemplate(user);
+        result.setText(String.format("Incorrect!%nYou scored *%d* points!", currentScore));
+        result.setReplyMarkup(inlineKeyboardMarkup);
+        return List.of(result);
     }
 
     private List<PartialBotApiMethod<? extends Serializable>> startNewQuiz(User user) {
@@ -100,7 +100,7 @@ public class QuizHandler implements Handler{
     private List<PartialBotApiMethod<? extends Serializable>> nextQuestion(User user) {
         Question question = questionRepository.getRandomQuestion();
 // Собираем список возможных вариантов ответа
-        List<String> options = new ArrayList<>(List.of(question.getAnswers()));
+        List<String> options = new ArrayList<>(List.of(question.getCorrectAnswer(), question.getOptionOne(), question.getOptionTwo(), question.getOptionThree()));
 // Перемешиваем
         Collections.shuffle(options);
 // Начинаем формировать сообщение с вопроса
@@ -127,9 +127,10 @@ public class QuizHandler implements Handler{
             sb.append("\n");
         }
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtonsRowOne, inlineKeyboardButtonsRowTwo));
-        return List.of(createMessageTemplate(user)
-                .setText(sb.toString())
-                .setReplyMarkup(inlineKeyboardMarkup));
+        SendMessage result = createMessageTemplate(user);
+        result.setText(sb.toString());
+        result.setReplyMarkup(inlineKeyboardMarkup);
+        return List.of(result);
     }
 
 

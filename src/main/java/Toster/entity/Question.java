@@ -29,6 +29,18 @@ public class Question {
     @Column
     private String author;
 
+    @Column
+    private String correctAnswer;
+
+    @Column
+    private String optionOne;
+
+    @Column
+    private String optionTwo;
+
+    @Column
+    private String optionThree;
+
     private boolean isPassed;
 
     @OneToMany(mappedBy = "question")
@@ -112,5 +124,53 @@ public class Question {
 
     public void setTest(List<Test> test) {
         this.test = test;
+    }
+
+    public QuestionDifficulty getQuestionDifficulty() {
+        return questionDifficulty;
+    }
+
+    public void setQuestionDifficulty(QuestionDifficulty questionDifficulty) {
+        this.questionDifficulty = questionDifficulty;
+    }
+
+    public String getCorrectAnswer() {
+        return correctAnswer;
+    }
+
+    public void setCorrectAnswer(String correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
+
+    public String getOptionOne() {
+        return optionOne;
+    }
+
+    public void setOptionOne(String optionOne) {
+        this.optionOne = optionOne;
+    }
+
+    public String getOptionTwo() {
+        return optionTwo;
+    }
+
+    public void setOptionTwo(String optionTwo) {
+        this.optionTwo = optionTwo;
+    }
+
+    public String getOptionThree() {
+        return optionThree;
+    }
+
+    public void setOptionThree(String optionThree) {
+        this.optionThree = optionThree;
+    }
+
+    public boolean isPassed() {
+        return isPassed;
+    }
+
+    public void setPassed(boolean passed) {
+        isPassed = passed;
     }
 }

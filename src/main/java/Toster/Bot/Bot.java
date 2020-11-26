@@ -2,7 +2,6 @@ package Toster.Bot;
 
 
 import Toster.entity.User;
-import jdk.incubator.jpackage.internal.Log;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
@@ -61,7 +60,7 @@ public class Bot extends TelegramLongPollingBot {
         try {
             execute(sendMessage);
         } catch (TelegramApiException e) {
-            Log.error("oops");
+            //Log.error("oops");
         }
     }
 }
