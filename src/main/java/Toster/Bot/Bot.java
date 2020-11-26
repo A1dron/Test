@@ -13,10 +13,10 @@ import javax.annotation.PostConstruct;
 @Component
 public class Bot extends TelegramLongPollingBot {
 
-    @PostConstruct
-    public void Construct(){
-        System.out.println("флюгигенхайме");
-    }
+//    @PostConstruct
+//    public void Construct(){
+//        System.out.println("флюгигенхайме");
+//    }
 
     //@Value("${bot.name}")
     private String botUsername ="CrazyHumburgerBot";
