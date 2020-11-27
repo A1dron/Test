@@ -45,6 +45,9 @@ public class User {
         this.botState = State.START;
     }
 
+    public User() {
+    }
+
     public Long getId() {
         return id;
     }

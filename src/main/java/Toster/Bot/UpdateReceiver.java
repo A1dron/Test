@@ -27,19 +27,12 @@ public class UpdateReceiver {
     }
 
     public List<PartialBotApiMethod<? extends Serializable>> handle(Update update) {
-        // try-catch, чтобы при несуществующей команде просто возвращать пустой список
         try {
-            // Проверяем, если Update - сообщение с текстом
             if (isMessageWithText(update)) {
-                // Получаем Message из Update
                 final Message message = update.getMessage();
-                // Получаем айди чата с пользователем
                 final int chatId = message.getFrom().getId();
-                // Просим у репозитория пользователя. Если такого пользователя нет - создаем нового и возвращаем его.
-                // Как раз на случай нового пользователя мы и сделали конструктор с одним параметром в классе User
                 final User user = userRepository.getByChatId(chatId)
                         .orElseGet(() -> userRepository.save(new User(chatId)));
-                // Ищем нужный обработчик и возвращаем результат его работы
                 return getHandlerByState(user.getBotState()).handle(user, message.getText());
             } else if (update.hasCallbackQuery()) {
                 final CallbackQuery callbackQuery = update.getCallbackQuery();

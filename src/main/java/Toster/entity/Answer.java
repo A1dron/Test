@@ -8,7 +8,7 @@ public class Answer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "answer")
-    @SequenceGenerator(name="answer", sequenceName = "seq_answer")
+    @SequenceGenerator(name = "answer", sequenceName = "seq_answer")
     private Long id;
 
     @Column
@@ -21,13 +21,44 @@ public class Answer {
     @JoinColumn
     private Question question;
 
-    public Answer(){}
+    public Answer() {
+    }
 
-    public Answer(String answer){
+    public Answer(String answer, boolean isTrueAnswer) {
+
         this.answer = answer;
+        this.isTrueAnswer = isTrueAnswer;
     }
 
     public void setAnswer(String answer) {
         this.answer = answer;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public boolean isTrueAnswer() {
+        return isTrueAnswer;
+    }
+
+    public void setTrueAnswer(boolean trueAnswer) {
+        isTrueAnswer = trueAnswer;
+    }
+
+    public Question getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Question question) {
+        this.question = question;
     }
 }

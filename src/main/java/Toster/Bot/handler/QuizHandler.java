@@ -1,6 +1,7 @@
 package Toster.Bot.handler;
 
 import Toster.Bot.State;
+import Toster.entity.Answer;
 import Toster.entity.Question;
 import Toster.entity.User;
 import Toster.repositoryes.QuestionRepository;
@@ -20,13 +21,9 @@ import static Toster.Bot.util.TelegramUtil.createMessageTemplate;
 
 public class QuizHandler implements Handler{
 
-    //Храним поддерживаемые CallBackQuery в виде констант
-
     public static final String QUIZ_CORRECT = "/quiz_correct";
     public static final String QUIZ_INCORRECT = "/quiz_incorrect";
     public static final String QUIZ_START = "/quiz_start";
-
-//Храним варианты ответа
 
     private static final List<String> OPTIONS = List.of("A", "B", "C", "D");
 
@@ -41,10 +38,8 @@ public class QuizHandler implements Handler{
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
         if (message.startsWith(QUIZ_CORRECT)) {
-// действие на коллбек с правильным ответом
             return correctAnswer(user, message);
         } else if (message.startsWith(QUIZ_INCORRECT)) {
-// действие на коллбек с неправильным ответом
             return incorrectAnswer(user);
         } else {
             return startNewQuiz(user);
@@ -52,40 +47,28 @@ public class QuizHandler implements Handler{
     }
 
     private List<PartialBotApiMethod<? extends Serializable>> correctAnswer(User user, String message) {
-        //Log.info("correct");
+        new SendMessage().setText("correct");
         final int currentScore = user.getScore() + 1;
         user.setScore(currentScore);
         userRepository.save(user);
-
         return nextQuestion(user);
     }
 
     private List<PartialBotApiMethod<? extends Serializable>> incorrectAnswer(User user) {
         final int currentScore = user.getScore();
-
-// Обновляем лучший итог
-
         if (user.getHighScore() < currentScore) {
             user.setHighScore(currentScore);
         }
-
-// Меняем статус пользователя
-
         user.setScore(0);
         user.setBotState(State.NONE);
         userRepository.save(user);
-
-
-// Создаем кнопку для повторного начала игры
-
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
 
         List<InlineKeyboardButton> inlineKeyboardButtonsRowOne = List.of(
-                createInlineKeyboardButton("Try again?", QUIZ_START));
-
+                createInlineKeyboardButton("Ну шо, хочешь повторить?", QUIZ_START));
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtonsRowOne));
         SendMessage result = createMessageTemplate(user);
-        result.setText(String.format("Incorrect!%nYou scored *%d* points!", currentScore));
+        result.setText(String.format("Хаха, я знал что ты ошибешься в таком простом вопросе!%nТвой счёт = *%d* поинтам!", currentScore));
         result.setReplyMarkup(inlineKeyboardMarkup);
         return List.of(result);
     }
@@ -93,26 +76,21 @@ public class QuizHandler implements Handler{
     private List<PartialBotApiMethod<? extends Serializable>> startNewQuiz(User user) {
         user.setBotState(State.PLAYING_QUIZ);
         userRepository.save(user);
-
         return nextQuestion(user);
     }
 
     private List<PartialBotApiMethod<? extends Serializable>> nextQuestion(User user) {
         Question question = questionRepository.getRandomQuestion();
-// Собираем список возможных вариантов ответа
-        List<String> options = new ArrayList<>(List.of(question.getCorrectAnswer(), question.getOptionOne(), question.getOptionTwo(), question.getOptionThree()));
-// Перемешиваем
+        List<Answer> answers = question.getAnswers();
+        List<String> options = new ArrayList<>(List.of(answers.get(0).getAnswer(), answers.get(1).getAnswer(), answers.get(2).getAnswer(), answers.get(3).getAnswer()));
         Collections.shuffle(options);
-// Начинаем формировать сообщение с вопроса
         StringBuilder sb = new StringBuilder();
         sb.append('*')
                 .append(question.getQuestion())
                 .append("*\n\n");
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-// Создаем два ряда кнопок
         List<InlineKeyboardButton> inlineKeyboardButtonsRowOne = new ArrayList<>();
         List<InlineKeyboardButton> inlineKeyboardButtonsRowTwo = new ArrayList<>();
-// Формируем сообщение и записываем CallBackData на кнопки
         for (int i = 0; i < options.size(); i++) {
             InlineKeyboardButton button = new InlineKeyboardButton();
             final String callbackData = options.get(i).equalsIgnoreCase(String.valueOf(question.getAnswers())) ? QUIZ_CORRECT : QUIZ_INCORRECT;

@@ -31,8 +31,6 @@ public class RegistrationHandler implements Handler {
 
     @Override
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
-        // Проверяем тип полученного события
-
         if (message.equalsIgnoreCase(NAME_ACCEPT) || message.equalsIgnoreCase(NAME_CHANGE_CANCEL)) {
             return accept(user);
         } else if (message.equalsIgnoreCase(NAME_CHANGE)) {
@@ -43,73 +41,41 @@ public class RegistrationHandler implements Handler {
 
     public List<PartialBotApiMethod<? extends Serializable>>accept(User user) {
 
-// Если пользователь принял имя - меняем статус и сохраняем
-
         user.setBotState(State.NONE);
         userRepository.save(user);
-
-
-// Создаем кнопку для начала игры
-
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
         List<InlineKeyboardButton> inlineKeyboardButtonsRowOne = List.of(
-                createInlineKeyboardButton("Start quiz", QUIZ_START));
-
+                createInlineKeyboardButton("Start", QUIZ_START));
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtonsRowOne));
-
         SendMessage result = createMessageTemplate(user);
         result.setText(String.format(
-                "Your name is saved as: %s", user.getName()));
+                "Ну всё, теперь ты: %s", user.getName()));
         result.setReplyMarkup(inlineKeyboardMarkup);
         return List.of(result);
     }
 
     private List<PartialBotApiMethod<? extends Serializable>> checkName(User user, String message) {
-
-// При проверке имени мы превентивно сохраняем пользователю новое имя в базе
-
-
-// идея для рефакторинга - добавить временное хранение имени
-
         user.setName(message);
         userRepository.save(user);
-
-
-// Делаем кнопку для применения изменений
-
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
         List<InlineKeyboardButton> inlineKeyboardButtonsRowOne = List.of(
-                createInlineKeyboardButton("Accept", NAME_ACCEPT));
-
+                createInlineKeyboardButton("Принять", NAME_ACCEPT));
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtonsRowOne));
-
         SendMessage result = createMessageTemplate(user);
-        result.setText(String.format("You have entered: %s%nIf this is correct - press the button", user.getName()));
+        result.setText(String.format("Твоё имя: %s%nНу раз ты говоришь, что это твоё имя да будет так, жми на кнопку", user.getName()));
         result.setReplyMarkup(inlineKeyboardMarkup);
         return List.of(result);
     }
 
     private List<PartialBotApiMethod<? extends Serializable>> changeName(User user) {
-
-// При запросе изменения имени мы меняем State
-
         user.setBotState(State.ENTER_NAME);
         userRepository.save(user);
-
-
-// Создаем кнопку для отмены операции
-
         InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
-
         List<InlineKeyboardButton> inlineKeyboardButtonsRowOne = List.of(
-                createInlineKeyboardButton("Cancel", NAME_CHANGE_CANCEL));
-
+                createInlineKeyboardButton("Отмена", NAME_CHANGE_CANCEL));
         inlineKeyboardMarkup.setKeyboard(List.of(inlineKeyboardButtonsRowOne));
-
         SendMessage result = createMessageTemplate(user);
-        result.setText(String.format("Your current name is: %s%nEnter new name or press the button to continue", user.getName()));
+        result.setText(String.format("Твоё имя: %s%nВведи новое имя или жми кнопку", user.getName()));
         result.setReplyMarkup(inlineKeyboardMarkup);
         return List.of(result);
     }
