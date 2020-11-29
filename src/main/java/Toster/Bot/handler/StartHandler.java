@@ -16,9 +16,6 @@ import static Toster.Bot.util.TelegramUtil.createMessageTemplate;
 @Component
 public class StartHandler implements Handler{
 
-    //@Value("${bot.name}")
-    private String botUsername ="CrazyHumburgerBot";
-
     private final UserRepository userRepository;
 
     public StartHandler(UserRepository userRepository) {
@@ -29,7 +26,7 @@ public class StartHandler implements Handler{
     public List<PartialBotApiMethod<? extends Serializable>> handle(User user, String message) {
         SendMessage welcomeMessage = createMessageTemplate(user);
         welcomeMessage.setText(String.format(
-                        "Привет! Я *%s*%nЯ просто шутка", botUsername
+                        "Привет! Я *%s*%nЯ просто шутка", "Toster"
                 ));
         SendMessage registrationMessage = createMessageTemplate(user);
         registrationMessage.setText("Твоё имя ...");

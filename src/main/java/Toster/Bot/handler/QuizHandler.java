@@ -6,6 +6,8 @@ import Toster.entity.Question;
 import Toster.entity.User;
 import Toster.repositoryes.QuestionRepository;
 import Toster.repositoryes.UserRepository;
+import com.google.errorprone.annotations.Var;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.PartialBotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -19,11 +21,12 @@ import java.util.List;
 import static Toster.Bot.util.TelegramUtil.createInlineKeyboardButton;
 import static Toster.Bot.util.TelegramUtil.createMessageTemplate;
 
+@Component
 public class QuizHandler implements Handler{
 
     public static final String QUIZ_CORRECT = "/quiz_correct";
     public static final String QUIZ_INCORRECT = "/quiz_incorrect";
-    public static final String QUIZ_START = "/quiz_start";
+    public static final String QUIZ_START = "/question";
 
     private static final List<String> OPTIONS = List.of("A", "B", "C", "D");
 
@@ -93,7 +96,10 @@ public class QuizHandler implements Handler{
         List<InlineKeyboardButton> inlineKeyboardButtonsRowTwo = new ArrayList<>();
         for (int i = 0; i < options.size(); i++) {
             InlineKeyboardButton button = new InlineKeyboardButton();
-            final String callbackData = options.get(i).equalsIgnoreCase(String.valueOf(question.getAnswers())) ? QUIZ_CORRECT : QUIZ_INCORRECT;
+            String callbackData = null;
+            if (answers.get(i).getTrueAnswer()) {
+                callbackData = QUIZ_CORRECT;
+            } else callbackData = QUIZ_INCORRECT;
             button.setText(OPTIONS.get(i));
             button.setCallbackData(String.format("%s %d", callbackData, question.getId()));
             if (i < 2) {
@@ -114,7 +120,7 @@ public class QuizHandler implements Handler{
 
     @Override
     public State operatedBotState() {
-        return null;
+        return State.PLAYING_QUIZ;
     }
 
     @Override
