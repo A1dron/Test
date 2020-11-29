@@ -86,7 +86,6 @@ public class QuizHandler implements Handler{
         Question question = questionRepository.getRandomQuestion();
         List<Answer> answers = question.getAnswers();
         List<String> options = new ArrayList<>(List.of(answers.get(0).getAnswer(), answers.get(1).getAnswer(), answers.get(2).getAnswer(), answers.get(3).getAnswer()));
-        Collections.shuffle(options);
         StringBuilder sb = new StringBuilder();
         sb.append('*')
                 .append(question.getQuestion())
@@ -97,7 +96,7 @@ public class QuizHandler implements Handler{
         for (int i = 0; i < options.size(); i++) {
             InlineKeyboardButton button = new InlineKeyboardButton();
             String callbackData = null;
-            if (answers.get(i).getTrueAnswer()) {
+            if (answers.get(i).isTrueAnswer()) {
                 callbackData = QUIZ_CORRECT;
             } else callbackData = QUIZ_INCORRECT;
             button.setText(OPTIONS.get(i));

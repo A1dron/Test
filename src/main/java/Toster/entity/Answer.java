@@ -46,12 +46,6 @@ public class Answer {
         return answer;
     }
 
-    public Boolean getTrueAnswer(){
-        if (!isTrueAnswer) {
-            return false;
-        }
-        return true;
-    }
 
     public boolean isTrueAnswer() {
         return isTrueAnswer;
